@@ -1,49 +1,27 @@
-import type { Metadata, Viewport } from "next";
+import React from 'react'
 
-import { DM_Sans, DM_Mono } from "next/font/google";
+import { SidebarProvider } from '@/components/ui';
 
-import "./globals.css";
-import Providers from "./_contexts";
+import Sidebar from './_components/sidebar';
+import ExperimentalAlertDialog from './_components/experimental-alert-dialog';
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-});
+import { ChatProvider } from './chat/_contexts/chat';
 
-const dmMono = DM_Mono({
-  variable: "--font-dm-mono",
-  weight: ["300", "400", "500"],
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "The Hive",
-  description: "A modular network of interoperable DeFi agents",
-};
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  height: 'device-height',
-  initialScale: 1,
-  minimumScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+interface Props {
+    children: React.ReactNode;
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className="dark">
-      <body
-        className={`${dmSans.variable} ${dmMono.variable} antialiased bg-white dark:bg-neutral-900`}
-      >
-        <Providers>
-          {children}
-        </Providers>
-      </body>
-    </html>
-  );
+const Layout: React.FC<Props> = ({ children }) => {
+    return (
+        <SidebarProvider>
+            <ExperimentalAlertDialog />
+            <ChatProvider>
+                <Sidebar>
+                    {children}
+                </Sidebar>
+            </ChatProvider>
+        </SidebarProvider>
+    )
 }
+
+export default Layout;
